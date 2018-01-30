@@ -5,7 +5,6 @@ import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,8 @@ public class UserRepositoryTest {
 	@Before
 	public void setUp() {
 		user = new User();
-		user.setFirstName("Jan");
-		user.setEmail("john@domain.com");
+		user.setFirstName("Grzegorz");
+		user.setEmail("grzegorz@domain.com");
 		user.setAccountStatus(AccountStatus.NEW);
 	}
 
@@ -54,7 +53,6 @@ public class UserRepositoryTest {
 		Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
 	}
 
-	@Ignore
 	@Test
 	public void shouldStoreANewUser() {
 
