@@ -22,6 +22,7 @@ public class BlogManager extends DomainService implements BlogService {
     @Override
     public Long createUser(UserRequest userRequest) {
         User user = mapper.mapToEntity(userRequest);
+
         user.setAccountStatus(AccountStatus.NEW);
         userRepository.save(user);
         return user.getId();
@@ -30,6 +31,9 @@ public class BlogManager extends DomainService implements BlogService {
     @Override
     public Long createPost(Long userId, PostRequest postRequest) {
         User user = userRepository.findOne(userId);
+        if(user.getAccountStatus() != AccountStatus.CONFIRMED) {
+            throw new DomainError("user status has to be confirmed to add post");
+        }
         BlogPost post = mapper.mapToEntity(postRequest);
         post.setUser(user);
         blogPostRepository.save(post);
@@ -42,6 +46,9 @@ public class BlogManager extends DomainService implements BlogService {
         BlogPost post = blogPostRepository.findOne(postId);
         if (post.getUser().getId().equals(userId)) {
             throw new DomainError("cannot like own post");
+        }
+        if (user.getAccountStatus() != AccountStatus.CONFIRMED) {
+            throw new DomainError("user must be CONFIRMED");
         }
         Optional<LikePost> existingLikeForPost = likePostRepository.findByUserAndPost(user, post);
         if (existingLikeForPost.isPresent()) {
