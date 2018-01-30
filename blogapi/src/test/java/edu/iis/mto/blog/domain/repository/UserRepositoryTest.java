@@ -91,4 +91,12 @@ public class UserRepositoryTest {
 				"Dariusz", "Kom", userEmail);
 		Assert.assertThat(userList.get(0).getFirstName(), Matchers.is(user.getFirstName()));
 	}
+
+	@Test
+	public void notFindingUserIsCorrect() {
+		repository.save(user);
+		List<User> userList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+				userFirstName + "x", userLastName + "x", userEmail + "x");
+		Assert.assertThat(userList.size(), Matchers.is(0));
+	}
 }
