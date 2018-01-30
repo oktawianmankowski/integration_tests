@@ -28,15 +28,17 @@ public class UserRepositoryTest {
 	private User user;
 	private String userFirstName;
 	private String userLastName;
+	private String userEmail;
 
 	@Before
 	public void setUp() {
 		userFirstName = "Grzegorz";
 		userLastName = "Komorowski";
+		userEmail = "grzegorz@domain.com";
 		user = new User();
 		user.setFirstName(userFirstName);
 		user.setLastName(userLastName);
-		user.setEmail("grzegorz@domain.com");
+		user.setEmail(userEmail);
 		user.setAccountStatus(AccountStatus.NEW);
 	}
 
@@ -79,6 +81,14 @@ public class UserRepositoryTest {
 		repository.save(user);
 		List<User> userList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
 				"Dariusz", userLastName, "g@domain.com");
+		Assert.assertThat(userList.get(0).getFirstName(), Matchers.is(user.getFirstName()));
+	}
+
+	@Test
+	public void findingUserWithProperEmailIsCorrect() {
+		repository.save(user);
+		List<User> userList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+				"Dariusz", "Kom", userEmail);
 		Assert.assertThat(userList.get(0).getFirstName(), Matchers.is(user.getFirstName()));
 	}
 }
