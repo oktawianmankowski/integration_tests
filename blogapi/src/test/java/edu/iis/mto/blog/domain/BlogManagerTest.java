@@ -41,18 +41,8 @@ import java.util.Optional;
     BlogPost blogPost;
 
     @Before public void setUp() {
-        user = new User();
-        user.setFirstName("Zbigniew");
-        user.setEmail("zbigniew@interia.com");
-        user.setAccountStatus(AccountStatus.CONFIRMED);
-        user.setId(30L);
-
-        userWhoLikesPost = new User();
-        userWhoLikesPost.setId(31L);
-        userWhoLikesPost.setFirstName("Czesław");
-        userWhoLikesPost.setLastName("Miłosz");
-        userWhoLikesPost.setEmail("czeslaw.milosz@domain.com");
-        userWhoLikesPost.setAccountStatus(AccountStatus.CONFIRMED);
+        user = createUser(30L, "Zbigniew", "", "zbigniew@interia.com", AccountStatus.CONFIRMED);
+        userWhoLikesPost = createUser(31L, "Czesław", "Miłosz", "czeslaw.milosz@domain.com", AccountStatus.CONFIRMED);
 
         blogPost = new BlogPost();
         blogPost.setUser(user);
@@ -78,4 +68,14 @@ import java.util.Optional;
                 Matchers.equalTo(true));
     }
 
+    private User createUser(Long id, String name, String surname, String email, AccountStatus accountStatus) {
+        User newUser = new User();
+        newUser.setId(id);
+        newUser.setFirstName(name);
+        newUser.setLastName(surname);
+        newUser.setEmail(email);
+        newUser.setAccountStatus(accountStatus);
+
+        return newUser;
+    }
 }
