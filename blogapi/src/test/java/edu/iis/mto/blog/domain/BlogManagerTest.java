@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import edu.iis.mto.blog.api.request.UserRequest;
+import edu.iis.mto.blog.domain.errors.DomainError;
 import edu.iis.mto.blog.domain.model.AccountStatus;
 import edu.iis.mto.blog.domain.model.BlogPost;
 import edu.iis.mto.blog.domain.model.LikePost;
@@ -46,6 +47,7 @@ public class BlogManagerTest {
 
 	private User user;
 	private User confirmedUser;
+	private User newUser;
 	private BlogPost blogPost;
 
 	@Before
@@ -61,6 +63,12 @@ public class BlogManagerTest {
 		confirmedUser.setFirstName("Grzegorz");
 		confirmedUser.setEmail("g@domain.com");
 		confirmedUser.setAccountStatus(AccountStatus.CONFIRMED);
+
+		newUser = new User();
+		newUser.setId(3l);
+		newUser.setFirstName("Janusz");
+		newUser.setEmail("j@domain.com");
+		newUser.setAccountStatus(AccountStatus.NEW);
 
 		blogPost = new BlogPost();
 		blogPost.setUser(user);
@@ -85,5 +93,15 @@ public class BlogManagerTest {
 		Mockito.when(likePostRepository.findByUserAndPost(confirmedUser, blogPost)).thenReturn(likes);
 
 		Assert.assertThat(blogService.addLikeToPost(confirmedUser.getId(), blogPost.getId()), Matchers.is(true));
+	}
+
+	@Test(expected = DomainError.class)
+	public void likingPostByOtherThanConfirmedUserShouldThrowAnException() {
+		Mockito.when(userRepository.findOne(newUser.getId())).thenReturn(newUser);
+		Mockito.when(blogRepository.findOne(blogPost.getId())).thenReturn(blogPost);
+		Optional<LikePost> likes = Optional.empty();
+		Mockito.when(likePostRepository.findByUserAndPost(confirmedUser, blogPost)).thenReturn(likes);
+
+		blogService.addLikeToPost(newUser.getId(), blogPost.getId());
 	}
 }
