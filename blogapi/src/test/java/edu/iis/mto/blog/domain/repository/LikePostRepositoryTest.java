@@ -2,6 +2,7 @@ package edu.iis.mto.blog.domain.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.hamcrest.Matchers;
@@ -97,5 +98,21 @@ public class LikePostRepositoryTest {
 
 		Optional<LikePost> likePostList = repository.findByUserAndPost(user, blogPost);
 		Assert.assertThat(likePostList.get(), Matchers.is(likePost));
+	}
+
+	@Test(expected = NoSuchElementException.class)
+	public void notFindingLikePostByUserAndPostUsingImproperUserIsCorrect() {
+		User otherUser = new User();
+		otherUser.setFirstName("Dariusz");
+		otherUser.setEmail("d@domain.com");
+		otherUser.setAccountStatus(AccountStatus.NEW);
+
+		userRepository.save(user);
+		userRepository.save(otherUser);
+		blogPostRepository.save(blogPost);
+		repository.save(likePost);
+
+		Optional<LikePost> likePostList = repository.findByUserAndPost(otherUser, blogPost);
+		likePostList.get();
 	}
 }
