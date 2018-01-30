@@ -44,9 +44,9 @@ public class UserRepositoryTest {
 		Assert.assertThat(users, Matchers.hasSize(0));
 	}
 
-	@Ignore
 	@Test
 	public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
+		repository.deleteAllInBatch();
 		User persistedUser = entityManager.persist(user);
 		List<User> users = repository.findAll();
 
