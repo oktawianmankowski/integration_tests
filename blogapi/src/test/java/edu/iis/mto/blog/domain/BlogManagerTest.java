@@ -3,6 +3,7 @@ package edu.iis.mto.blog.domain;
 import edu.iis.mto.blog.api.request.UserRequest;
 import edu.iis.mto.blog.domain.model.AccountStatus;
 import edu.iis.mto.blog.domain.model.BlogPost;
+import edu.iis.mto.blog.domain.model.LikePost;
 import edu.iis.mto.blog.domain.model.User;
 import edu.iis.mto.blog.domain.repository.BlogPostRepository;
 import edu.iis.mto.blog.domain.repository.LikePostRepository;
@@ -20,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Optional;
 
 @RunWith(SpringRunner.class) @SpringBootTest public class BlogManagerTest {
 
@@ -64,6 +67,15 @@ import org.springframework.test.context.junit4.SpringRunner;
         Mockito.verify(userRepository).save(userParam.capture());
         User user = userParam.getValue();
         Assert.assertThat(user.getAccountStatus(), Matchers.equalTo(AccountStatus.NEW));
+    }
+
+    @Test public void addingLikeToPostShouldUserWithAccountCONFIRMED() {
+        Mockito.when(userRepository.findOne(userWhoLikesPost.getId())).thenReturn(userWhoLikesPost);
+        Mockito.when(blogRepository.findOne(blogPost.getId())).thenReturn(blogPost);
+        Optional<LikePost> likes = Optional.empty();
+        Mockito.when(likeRepository.findByUserAndPost(userWhoLikesPost, blogPost)).thenReturn(likes);
+        Assert.assertThat(blogService.addLikeToPost(userWhoLikesPost.getId(), blogPost.getId()),
+                Matchers.equalTo(true));
     }
 
 }
