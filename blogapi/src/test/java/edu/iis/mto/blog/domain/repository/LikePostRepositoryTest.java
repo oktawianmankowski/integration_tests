@@ -2,6 +2,7 @@ package edu.iis.mto.blog.domain.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -86,5 +87,15 @@ public class LikePostRepositoryTest {
 		List<LikePost> likePostsList = repository.findAll();
 
 		Assert.assertThat(likePostsList.get(0).getPost().getEntry(), Matchers.is(modifiedEntry));
+	}
+
+	@Test
+	public void findingLikePostByUserAndPostIsCorrect() {
+		userRepository.save(user);
+		blogPostRepository.save(blogPost);
+		repository.save(likePost);
+
+		Optional<LikePost> likePostList = repository.findByUserAndPost(user, blogPost);
+		Assert.assertThat(likePostList.get(), Matchers.is(likePost));
 	}
 }
