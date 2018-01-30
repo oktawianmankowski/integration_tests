@@ -72,4 +72,19 @@ public class LikePostRepositoryTest {
 
 		Assert.assertThat(persistedLikePost.getId(), Matchers.notNullValue());
 	}
+
+	@Test
+	public void modifyingLikePostIsCorrect() {
+		String modifiedEntry = "Modified Entry";
+
+		userRepository.save(user);
+		blogPostRepository.save(blogPost);
+		LikePost persistedLikePost = repository.save(likePost);
+
+		persistedLikePost.getPost().setEntry(modifiedEntry);
+		repository.save(persistedLikePost);
+		List<LikePost> likePostsList = repository.findAll();
+
+		Assert.assertThat(likePostsList.get(0).getPost().getEntry(), Matchers.is(modifiedEntry));
+	}
 }
