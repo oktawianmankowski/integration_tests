@@ -23,4 +23,13 @@ public class AddLikeToPost extends FunctionalTests {
     private JSONObject getJsonObject(String post) {
         return new JSONObject().put("entry", post);
     }
+
+    @Test
+    public void addingLikeShouldCheckCONFIRMEDStatusOfAccount() {
+
+        JSONObject first = getJsonObject("Pierwszy post!");
+        RESTAssurated(first, "/blog/user/2/like/1", HttpStatus.SC_BAD_REQUEST);
+
+    }
+
 }
