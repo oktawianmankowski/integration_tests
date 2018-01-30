@@ -26,11 +26,15 @@ public class UserRepositoryTest {
     private UserRepository repository;
 
     private User user;
+    private String firstName;
+    private String lastName;
+    private String email;
 
     @Before
     public void setUp() {
         user = new User();
         user.setFirstName("Jan");
+        user.setLastName("Nowak");
         user.setEmail("jan@gmail.com");
         user.setAccountStatus(AccountStatus.NEW);
     }
@@ -58,6 +62,54 @@ public class UserRepositoryTest {
         User persistedUser = repository.save(user);
 
         Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
+    }
+
+    @Test
+    public void nonExistingUserSearchTest() {
+        firstName = "Nieistniejacy";
+        lastName = "Uzytkownik";
+        email = "nieistniejacy@email.com";
+        repository.save(user);
+
+        List<User> foundUserList = repository
+                .findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(firstName, lastName,
+                        email);
+        Assert.assertThat(foundUserList, Matchers.hasSize(0));
+    }
+
+    @Test
+    public void correctFirstNameWithDifferentOtherValuesTest() {
+        lastName = "Inne";
+        email = "inny@email.com";
+        repository.save(user);
+        List<User> foundUserList = repository
+                .findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Jan", lastName, email);
+        Assert.assertThat(foundUserList, Matchers.hasSize(1));
+        Assert.assertThat(foundUserList.get(0).getFirstName(), Matchers.is(user.getFirstName()));
+    }
+
+    @Test
+    public void correctLastNameWithDifferentOtherValuesTest() {
+        firstName = "Inne";
+        email = "inny@gmail.com";
+        repository.save(user);
+        List<User> foundUserList = repository
+                .findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(firstName,
+                        user.getLastName(), email);
+        Assert.assertThat(foundUserList, Matchers.hasSize(1));
+        Assert.assertThat(foundUserList.get(0).getLastName(), Matchers.is(user.getLastName()));
+    }
+
+    @Test
+    public void correctEmailNameWithDifferentOtherValuesTest() {
+        firstName = "InneImie";
+        lastName = "InneNazwisko";
+        repository.save(user);
+        List<User> foundUserList = repository
+                .findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(firstName, lastName,
+                        user.getEmail());
+        Assert.assertThat(foundUserList, Matchers.hasSize(1));
+        Assert.assertThat(foundUserList.get(0).getEmail(), Matchers.is(user.getEmail()));
     }
 
 }
