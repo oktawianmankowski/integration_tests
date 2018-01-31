@@ -29,12 +29,14 @@ public class UserRepositoryTest {
     private String firstName;
     private String lastName;
     private String email;
+    private String test;
 
     @Before
     public void setUp() {
         firstName = "Jan";
         lastName = "Kowalski";
         email = "john@domain.com";
+        test = "test";
         user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -73,7 +75,7 @@ public class UserRepositoryTest {
 
         repository.save(user);
         List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
-                firstName, lastName, email);
+                firstName, test, test);
 
         Assert.assertThat(users.get(0).getFirstName(), Matchers.is(user.getFirstName()));
     }
@@ -83,7 +85,7 @@ public class UserRepositoryTest {
 
         repository.save(user);
         List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
-                firstName, lastName, email);
+                test, lastName, test);
 
         Assert.assertThat(users.get(0).getLastName(), Matchers.is(user.getLastName()));
     }
@@ -93,9 +95,19 @@ public class UserRepositoryTest {
 
         repository.save(user);
         List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
-                firstName, lastName, email);
+                test, test, email);
 
         Assert.assertThat(users.get(0).getEmail(), Matchers.is(user.getEmail()));
+    }
+
+    @Test
+    public void shouldFindNoUserWhenDataIsNotCorrect() {
+
+        repository.save(user);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+                test, test, test);
+
+        Assert.assertThat(users, Matchers.hasSize(0));
     }
 
 }
