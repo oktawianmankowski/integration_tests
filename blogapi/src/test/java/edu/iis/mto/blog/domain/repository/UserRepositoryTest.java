@@ -26,12 +26,19 @@ public class UserRepositoryTest {
     private UserRepository repository;
 
     private User user;
+    private String firstName;
+    private String lastName;
+    private String email;
 
     @Before
     public void setUp() {
+        firstName = "Jan";
+        lastName = "Kowalski";
+        email = "john@domain.com";
         user = new User();
-        user.setFirstName("Jan");
-        user.setEmail("john@domain.com");
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
         user.setAccountStatus(AccountStatus.NEW);
         repository.deleteAllInBatch();
     }
@@ -59,6 +66,16 @@ public class UserRepositoryTest {
         User persistedUser = repository.save(user);
 
         Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
+    }
+
+    @Test
+    public void shouldFindUserWhenFirstNameIsCorrect() {
+
+        repository.save(user);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+                firstName, lastName, email);
+
+        Assert.assertThat(users.get(0).getFirstName(), Matchers.is(user.getFirstName()));
     }
 
 }
