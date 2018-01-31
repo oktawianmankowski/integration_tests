@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(String firstName,
             String lastName, String email);
 
+    // Zagwarantowanie stałej kolejności
+    List<User> findAllByOrderByEmailAsc();
 }
