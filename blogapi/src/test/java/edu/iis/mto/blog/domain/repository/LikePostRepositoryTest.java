@@ -69,4 +69,10 @@ public class LikePostRepositoryTest {
         Assert.assertThat(found.isPresent(), Matchers.is(true));
     }
 
+    @Test
+    public void shouldFindNoPostsIfRepositoryIsEmpty() {
+        List<LikePost> posts = postRepository.findAll();
+        Assert.assertThat(posts, Matchers.hasSize(0));
+    }
+
 }
