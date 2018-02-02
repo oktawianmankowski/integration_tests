@@ -61,15 +61,6 @@ public class LikePostRepositoryTest {
     }
 
     @Test
-    public void shouldFindByUserAndPost() {
-        userRepository.save(user);
-        blogRepository.save(blogPost);
-        postRepository.save(likePost);
-        Optional<LikePost> found = postRepository.findByUserAndPost(user, blogPost);
-        Assert.assertThat(found.isPresent(), Matchers.is(true));
-    }
-
-    @Test
     public void shouldFindNoPostsIfRepositoryIsEmpty() {
         List<LikePost> posts = postRepository.findAll();
         Assert.assertThat(posts, Matchers.hasSize(0));
@@ -81,6 +72,30 @@ public class LikePostRepositoryTest {
         blogRepository.save(blogPost);
         LikePost persistedPost = postRepository.save(likePost);
         Assert.assertThat(persistedPost.getId(), Matchers.notNullValue());
+    }
+
+    @Test
+    public void shouldFindByUserAndPost() {
+        userRepository.save(user);
+        blogRepository.save(blogPost);
+        postRepository.save(likePost);
+        Optional<LikePost> found = postRepository.findByUserAndPost(user, blogPost);
+        Assert.assertThat(found.isPresent(), Matchers.is(true));
+    }
+
+    @Test
+    public void shouldNotFindByFalseUserAndPost() {
+        userRepository.save(user);
+        blogRepository.save(blogPost);
+        postRepository.save(likePost);
+        User falseUser = new User();
+        falseUser.setFirstName("Karol");
+        falseUser.setLastName("Nowak");
+        falseUser.setEmail("karol@domain.com");
+        falseUser.setAccountStatus(AccountStatus.NEW);
+        userRepository.save(falseUser);
+        Optional<LikePost> found = postRepository.findByUserAndPost(falseUser, blogPost);
+        Assert.assertThat(found.isPresent(), Matchers.is(false));
     }
 
 }
