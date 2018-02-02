@@ -2,7 +2,10 @@ package edu.iis.mto.blog.domain.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +24,12 @@ public class LikePostRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BlogPostRepository blogRepository;
+
+    @Autowired
+    private LikePostRepository postRepository;
 
     private User user;
     private LikePost likePost;
@@ -52,8 +61,12 @@ public class LikePostRepositoryTest {
     }
 
     @Test
-    public void test() {
-
+    public void shouldFindByUserAndPost() {
+        userRepository.save(user);
+        blogRepository.save(blogPost);
+        postRepository.save(likePost);
+        Optional<LikePost> found = postRepository.findByUserAndPost(user, blogPost);
+        Assert.assertThat(found.isPresent(), Matchers.is(true));
     }
 
 }
