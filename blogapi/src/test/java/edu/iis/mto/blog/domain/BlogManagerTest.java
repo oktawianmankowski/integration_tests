@@ -103,4 +103,13 @@ public class BlogManagerTest {
         blogService.addLikeToPost(newUser.getId(), blogPost.getId());
     }
 
+    @Test(expected = DomainError.class)
+    public void notCanAddingLikeToOwnPostByUser() {
+        blogPost.setUser(confirmedUser);
+        Mockito.when(userRepository.findOne(confirmedUser.getId())).thenReturn(confirmedUser);
+        Mockito.when(blogRepository.findOne(blogPost.getId())).thenReturn(blogPost);
+        Mockito.when(likeRepository.findByUserAndPost(confirmedUser, blogPost)).thenReturn(likePosts);
+        blogService.addLikeToPost(confirmedUser.getId(), blogPost.getId());
+    }
+
 }
