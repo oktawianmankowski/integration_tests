@@ -37,4 +37,12 @@ public class CreateUserTest extends FunctionalTests {
                 .post("/blog/user/1/post");
     }
 
+    @Test
+    public void notCanAddingPostByUserWithAccountStatusToNew() {
+        JSONObject jsonObject = new JSONObject().put("entry", "post");
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .body(jsonObject.toString()).expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when()
+                .post("/blog/user/2/post");
+    }
+
 }
