@@ -84,6 +84,15 @@ public class LikePostRepositoryTest {
     }
 
     @Test
+    public void shouldReturnLikePostWhenFindByUserAndPost() {
+        userRepository.save(user);
+        blogRepository.save(blogPost);
+        postRepository.save(likePost);
+        Optional<LikePost> found = postRepository.findByUserAndPost(user, blogPost);
+        Assert.assertThat(found.get(), Matchers.is(likePost));
+    }
+
+    @Test
     public void shouldNotFindByFalseUserAndPost() {
         userRepository.save(user);
         blogRepository.save(blogPost);
