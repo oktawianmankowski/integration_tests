@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import edu.iis.mto.blog.api.request.UserRequest;
+import edu.iis.mto.blog.domain.errors.DomainError;
 import edu.iis.mto.blog.domain.model.AccountStatus;
 import edu.iis.mto.blog.domain.model.BlogPost;
 import edu.iis.mto.blog.domain.model.LikePost;
@@ -50,6 +51,7 @@ public class BlogManagerTest {
     private String lastName;
     private String email;
     private BlogPost blogPost;
+    private Optional<LikePost> likePosts;
 
     @Before
     public void setUp() {
@@ -70,8 +72,8 @@ public class BlogManagerTest {
         newUser.setAccountStatus(AccountStatus.NEW);
         blogPost = new BlogPost();
         blogPost.setId(12L);
-        blogPost.setUser(newUser);
         blogPost.setEntry("Test");
+        likePosts = Optional.empty();
     }
 
     @Test
@@ -85,11 +87,20 @@ public class BlogManagerTest {
 
     @Test
     public void addingLikeToPostByUserWithAccountStatusToConfirmed() {
+        blogPost.setUser(newUser);
         Mockito.when(userRepository.findOne(confirmedUser.getId())).thenReturn(confirmedUser);
         Mockito.when(blogRepository.findOne(blogPost.getId())).thenReturn(blogPost);
-        Optional<LikePost> likePosts = Optional.empty();
         Mockito.when(likeRepository.findByUserAndPost(confirmedUser, blogPost)).thenReturn(likePosts);
         Assert.assertThat(blogService.addLikeToPost(confirmedUser.getId(), blogPost.getId()), Matchers.is(true));
+    }
+
+    @Test(expected = DomainError.class)
+    public void notCanAddingLikeToPostByUserWithAccountStatusToNew() {
+        blogPost.setUser(confirmedUser);
+        Mockito.when(userRepository.findOne(newUser.getId())).thenReturn(newUser);
+        Mockito.when(blogRepository.findOne(blogPost.getId())).thenReturn(blogPost);
+        Mockito.when(likeRepository.findByUserAndPost(newUser, blogPost)).thenReturn(likePosts);
+        blogService.addLikeToPost(newUser.getId(), blogPost.getId());
     }
 
 }
