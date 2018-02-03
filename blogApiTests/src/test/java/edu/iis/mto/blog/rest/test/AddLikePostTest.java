@@ -30,4 +30,10 @@ public class AddLikePostTest {
                 .expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when().post("/blog/user/1/like/1");
     }
 
+    @Test
+    public void notCanAddingLikeToPostByUserWithStatusToNew() {
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when().post("/blog/user/2/like/1");
+    }
+
 }
