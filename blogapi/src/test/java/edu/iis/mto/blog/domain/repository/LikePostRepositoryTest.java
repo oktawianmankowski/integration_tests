@@ -98,4 +98,17 @@ public class LikePostRepositoryTest {
         Assert.assertThat(found.isPresent(), Matchers.is(false));
     }
 
+    @Test
+    public void shouldNotFindByUserAndFalsePost() {
+        userRepository.save(user);
+        blogRepository.save(blogPost);
+        postRepository.save(likePost);
+        BlogPost falseBlogPost = new BlogPost();
+        falseBlogPost.setUser(user);
+        falseBlogPost.setEntry("False");
+        blogRepository.save(falseBlogPost);
+        Optional<LikePost> found = postRepository.findByUserAndPost(user, falseBlogPost);
+        Assert.assertThat(found.isPresent(), Matchers.is(false));
+    }
+
 }
