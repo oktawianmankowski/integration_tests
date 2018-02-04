@@ -24,6 +24,9 @@ public class BlogDataFinder extends DomainService implements DataFinder {
         if (user == null) {
             throw new EntityNotFoundException(String.format("user with id %1 does not exists", userId));
         }
+        if(user.getAccountStatus() == AccountStatus.REMOVED){
+            throw new EntityNotFoundException("user is removed");
+        }
         return mapper.mapToDto(user);
     }
 
