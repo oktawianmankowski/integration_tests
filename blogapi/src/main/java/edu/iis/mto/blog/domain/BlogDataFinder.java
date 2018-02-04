@@ -24,7 +24,7 @@ public class BlogDataFinder extends DomainService implements DataFinder {
         if (user == null) {
             throw new EntityNotFoundException(String.format("user with id %1 does not exists", userId));
         }
-        if(user.getAccountStatus() == AccountStatus.REMOVED){
+        if (user.getAccountStatus() == AccountStatus.REMOVED) {
             throw new EntityNotFoundException("user is removed");
         }
         return mapper.mapToDto(user);
@@ -34,7 +34,11 @@ public class BlogDataFinder extends DomainService implements DataFinder {
     public List<UserData> findUsers(String searchString) {
         List<User> users = userRepository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
                 searchString, searchString, searchString);
-
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getAccountStatus() == AccountStatus.REMOVED) {
+                users.remove(i);
+            }
+        }
         return users.stream().map(user -> mapper.mapToDto(user)).collect(Collectors.toList());
     }
 
@@ -47,7 +51,7 @@ public class BlogDataFinder extends DomainService implements DataFinder {
     @Override
     public List<PostData> getUserPosts(Long userId) {
         User user = userRepository.findOne(userId);
-        if(user.getAccountStatus() == AccountStatus.REMOVED){
+        if (user.getAccountStatus() == AccountStatus.REMOVED) {
             throw new EntityNotFoundException("user is removed");
         }
         List<BlogPost> posts = blogPostRepository.findByUser(user);
