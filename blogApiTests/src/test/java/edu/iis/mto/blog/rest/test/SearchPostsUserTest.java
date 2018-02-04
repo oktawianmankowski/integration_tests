@@ -45,11 +45,9 @@ public class SearchPostsUserTest extends FunctionalTests{
     }
 
     @Test
-    public void searchingPostsByUserWithAccountStatusRemoved() {
-        String likesCount = RestAssured.given().accept(ContentType.JSON)
-                .header("Content-Type", "application/json;charset=UTF-8").expect().log().all()
-                .statusCode(HttpStatus.SC_OK).when().get("/blog/user/5/post").then().extract().asString();
-        Assert.assertThat(likesCount, Matchers.is("[]"));
+    public void searchingPostsByUserWithAccountStatusRemovedShouldNotFound() {
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .expect().log().all().statusCode(HttpStatus.SC_NOT_FOUND).when().get("/blog/user/5/post");
     }
 
 }
