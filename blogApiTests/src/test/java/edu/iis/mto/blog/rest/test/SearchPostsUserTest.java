@@ -30,4 +30,17 @@ public class SearchPostsUserTest {
         Assert.assertThat(likesCount, Matchers.is(1));
     }
 
+    @Test
+    public void searchingPostsShouldReturnLikesCountEqualsTwo() {
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .expect().log().all().statusCode(HttpStatus.SC_OK).when().post("/blog/user/3/like/1");
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .expect().log().all().statusCode(HttpStatus.SC_OK).when().post("/blog/user/4/like/1");
+        int likesCount = RestAssured.given().accept(ContentType.JSON)
+                .header("Content-Type", "application/json;charset=UTF-8").expect().log().all()
+                .statusCode(HttpStatus.SC_OK).when().get("/blog/user/1/post").then().extract().jsonPath()
+                .getInt("likesCount[0]");
+        Assert.assertThat(likesCount, Matchers.is(2));
+    }
+
 }
