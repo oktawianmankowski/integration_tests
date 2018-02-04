@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
-public class AddLikePostTest {
+public class AddLikePostTest extends FunctionalTests{
 
     @BeforeClass
     public static void setUp() {
@@ -36,6 +36,12 @@ public class AddLikePostTest {
     public void notCanAddingLikeToPostByUserWithStatusToNew() {
         RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
                 .expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when().post("/blog/user/2/like/1");
+    }
+
+    @Test
+    public void notCanAddingLikeToPostByUserWithStatusToRemoved() {
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when().post("/blog/user/5/like/1");
     }
 
     @Test

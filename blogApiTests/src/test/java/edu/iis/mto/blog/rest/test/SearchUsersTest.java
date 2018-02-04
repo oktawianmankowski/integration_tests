@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
-public class SearchUsersTest {
+public class SearchUsersTest extends FunctionalTests{
 
     @Test
     public void searchingUserByIdWithAccountStatusRemovedShouldNotFound() {
