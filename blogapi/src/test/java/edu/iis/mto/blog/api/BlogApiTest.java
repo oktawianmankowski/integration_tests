@@ -1,15 +1,20 @@
 package edu.iis.mto.blog.api;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import javax.persistence.EntityNotFoundException;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,13 +40,20 @@ public class BlogApiTest {
     @MockBean
     private DataFinder finder;
 
-    @Test
-    public void postBlogUserShouldResponseWithStatusCreatedAndNewUserId() throws Exception {
-        Long newUserId = 1L;
-        UserRequest user = new UserRequest();
+    private UserRequest user;
+    private Long newUserId;
+
+    @Before
+    public void setUp() {
+        user = new UserRequest();
         user.setEmail("john@domain.com");
         user.setFirstName("John");
         user.setLastName("Steward");
+        newUserId = (long) 1;
+    }
+
+    @Test
+    public void postBlogUserShouldResponseWithStatusCreatedAndNewUserId() throws Exception {
         Mockito.when(blogService.createUser(user)).thenReturn(newUserId);
         String content = writeJson(user);
 
@@ -54,4 +66,18 @@ public class BlogApiTest {
         return new ObjectMapper().writer().writeValueAsString(obj);
     }
 
+    @Test
+    public void responseWithStatus409Test() throws Exception {
+        Mockito.when(blogService.createUser(user)).thenThrow(DataIntegrityViolationException.class);
+        String content = writeJson(user);
+        mvc.perform(post("/blog/user").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8).content(content)).andExpect(status().isConflict());
+    }
+
+    @Test
+    public void responseWithStatus404Test() throws Exception {
+        Long wrongUserId = (long) 22;
+        Mockito.when(finder.getUserData(wrongUserId)).thenThrow(new EntityNotFoundException());
+        mvc.perform(get("/blog/user/{id}", wrongUserId)).andExpect(status().isNotFound());
+    }
 }
