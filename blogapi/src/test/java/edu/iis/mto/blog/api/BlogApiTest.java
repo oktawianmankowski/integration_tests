@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,6 +55,14 @@ public class BlogApiTest {
 
         mvc.perform(post("/blog/user").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8).content(content)).andExpect(status().isConflict());
+    }
+
+    @Test
+    public void shouldReturn404ForNotExistingUser() throws Exception {
+        String findString = "1";
+        Mockito.when(finder.getUserData(1L)).thenReturn(null);
+
+        mvc.perform(get("/blog/wrongFind/1")).andExpect(status().isNotFound());
     }
 
     private UserRequest createUserRequest() {
