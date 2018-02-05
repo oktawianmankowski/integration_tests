@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -47,6 +48,19 @@ public class LikePostRepositoryTest {
 
         Assert.assertThat(likePosts, Matchers.hasSize(1));
         Assert.assertEquals(likePosts.get(0).getPost().getEntry(), "Post 1");
+    }
+
+    @Test
+    public void shouldFindByUserAndPost() {
+        LikePost likePost = createLikePost(user, blogPost);
+        repository.save(likePost);
+        Optional<LikePost> optionalResult = repository.findByUserAndPost(user, blogPost);
+
+        LikePost result = optionalResult.orElse(null);
+
+        Assert.assertNotNull(result);
+        Assert.assertEquals(result.getUser().getEmail(), "john_d@domain.com");
+        Assert.assertEquals(result.getPost().getEntry(), "Post 1");
     }
 
     private User createUser() {
