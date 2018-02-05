@@ -76,6 +76,20 @@ public class LikePostRepositoryTest {
         Assert.assertNull(result);
     }
 
+    @Test
+    public void shouldModifyLikePost() {
+        LikePost likePost = createLikePost(user, blogPost);
+        repository.save(likePost);
+        LikePost result = repository.findByUserAndPost(user, blogPost).get();
+
+        result.setUser(user2);
+        repository.save(result);
+
+        result = repository.findByUserAndPost(user2, blogPost).get();
+
+        Assert.assertEquals(result.getUser().getEmail(), "t_jones@domain.com");
+    }
+
     private User createUser() {
         User user = new User();
         user.setFirstName("John");
