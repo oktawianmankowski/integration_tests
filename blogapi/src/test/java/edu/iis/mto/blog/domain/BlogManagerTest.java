@@ -62,6 +62,16 @@ public class BlogManagerTest {
         blogService.addLikeToPost(2L, 1L);
     }
 
+    @Test (expected = DomainError.class)
+    public void shouldThrowErrorForTheSameUser() {
+        User user = createUser();
+
+        Mockito.when(userRepository.findOne(1L)).thenReturn(user);
+        Mockito.when(blogPostRepository.findOne(1L)).thenReturn(createBlogPost(user));
+
+        blogService.addLikeToPost(1L, 1L);
+    }
+
     private User createUser() {
         User user = new User();
         user.setId(1L);
