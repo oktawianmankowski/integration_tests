@@ -1,5 +1,6 @@
 package edu.iis.mto.blog.rest.test;
 
+import com.jayway.restassured.response.ResponseBody;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -23,5 +24,21 @@ public class CreateUserTest extends FunctionalTests {
         RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
                 .body(jsonObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
                 .post("/blog/user");
+    }
+
+    @Test
+    public void shouldAddPost() {
+        JSONObject userObj = new JSONObject().put("email", "tracy3@domain.com");
+        JSONObject postObj = new JSONObject().put("entry", "Post content");
+        ResponseBody createUserResponse = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .body(userObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
+                .post("/blog/user").body();
+
+        Integer userId = createUserResponse.jsonPath().getJsonObject("id");
+
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .body(postObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
+                .post("/blog/user/" + userId + "/post").body();
+
     }
 }
