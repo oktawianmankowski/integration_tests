@@ -22,6 +22,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Optional;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class BlogManagerTest {
@@ -70,6 +72,23 @@ public class BlogManagerTest {
         Mockito.when(blogPostRepository.findOne(1L)).thenReturn(createBlogPost(user));
 
         blogService.addLikeToPost(1L, 1L);
+    }
+
+    @Test
+    public void shouldAddLike() {
+        User user = createUser();
+        User user2 = createUser2();
+        BlogPost blogPost = createBlogPost(user2);
+
+        Mockito.when(userRepository.findOne(1L)).thenReturn(user);
+        Mockito.when(userRepository.findOne(2L)).thenReturn(user2);
+        Mockito.when(blogPostRepository.findOne(1L)).thenReturn(blogPost);
+        Mockito.when(likePostRepository.findByUserAndPost(user, blogPost)).thenReturn(Optional.<LikePost>empty());
+
+        blogService.addLikeToPost(1L, 1L);
+
+        ArgumentCaptor<LikePost> likePostParam = ArgumentCaptor.forClass(LikePost.class);
+        Mockito.verify(likePostRepository).save(likePostParam.capture());
     }
 
     private User createUser() {
