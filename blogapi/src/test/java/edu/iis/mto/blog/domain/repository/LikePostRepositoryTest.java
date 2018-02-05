@@ -26,6 +26,7 @@ import java.util.Optional;
 public class LikePostRepositoryTest {
 
     private User user;
+    private User user2;
     private BlogPost blogPost;
 
     @Autowired
@@ -37,6 +38,7 @@ public class LikePostRepositoryTest {
     @Before
     public void setUp() {
         user = entityManager.persist(createUser());
+        user2 = entityManager.persist(createUser2());
         blogPost = entityManager.persist(createBlogPost(user));
     }
 
@@ -63,11 +65,31 @@ public class LikePostRepositoryTest {
         Assert.assertEquals(result.getPost().getEntry(), "Post 1");
     }
 
+    @Test
+    public void shouldNotFindByUserAndPost() {
+        LikePost likePost = createLikePost(user, blogPost);
+        repository.save(likePost);
+        Optional<LikePost> optionalResult = repository.findByUserAndPost(user2, blogPost);
+
+        LikePost result = optionalResult.orElse(null);
+
+        Assert.assertNull(result);
+    }
+
     private User createUser() {
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
         user.setEmail("john_d@domain.com");
+        user.setAccountStatus(AccountStatus.NEW);
+        return user;
+    }
+
+    private User createUser2() {
+        User user = new User();
+        user.setFirstName("Tom");
+        user.setLastName("Jones");
+        user.setEmail("t_jones@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
         return user;
     }
