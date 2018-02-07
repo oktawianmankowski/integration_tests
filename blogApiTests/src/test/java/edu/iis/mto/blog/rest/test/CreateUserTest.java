@@ -1,12 +1,10 @@
 package edu.iis.mto.blog.rest.test;
 
-import com.jayway.restassured.response.ResponseBody;
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.junit.Test;
-
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
 
 public class CreateUserTest extends FunctionalTests {
 
@@ -28,65 +26,32 @@ public class CreateUserTest extends FunctionalTests {
 
     @Test
     public void shouldAddPost() {
-        JSONObject userObj = new JSONObject().put("email", "tracy3@domain.com");
         JSONObject postObj = new JSONObject().put("entry", "Post content");
-        ResponseBody createUserResponse = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .body(userObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
-                .post("/blog/user").body();
-
-        Integer userId = createUserResponse.jsonPath().getJsonObject("id");
 
         RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
                 .body(postObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
-                .post("/blog/user/" + userId + "/post").body();
+                .post("/blog/user/" + 1000 + "/post").body();
 
     }
 
     @Test
     public void shouldNotAllowToLikeOwnPost() {
-        JSONObject userObj = new JSONObject().put("email", "tracy5@domain.com");
-        JSONObject postObj = new JSONObject().put("entry", "Post content");
-        ResponseBody createUserResponse = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .body(userObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
-                .post("/blog/user").body();
-
-        Integer userId = createUserResponse.jsonPath().getJsonObject("id");
-
-        ResponseBody createPostResponse = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .body(postObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
-                .post("/blog/user/" + userId + "/post").body();
-
-        Integer postId = createPostResponse.jsonPath().getJsonObject("id");
-
         RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .body(postObj.toString()).expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when()
-                .post("/blog/user/" + userId + "/like/" + postId);
+                .expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when()
+                .post("/blog/user/" + 1000 + "/like/" + 1000);
     }
 
     @Test
     public void shouldNotAllowToLikePostByNewUser() {
-        JSONObject userObj = new JSONObject().put("email", "tracy6@domain.com");
-        JSONObject userObj2 = new JSONObject().put("email", "tracy66@domain.com");
-        JSONObject postObj = new JSONObject().put("entry", "Post content");
-        ResponseBody createUserResponse = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .body(userObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
-                .post("/blog/user").body();
-
-        ResponseBody createUserResponse2 = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .body(userObj2.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
-                .post("/blog/user").body();
-
-        Integer userId = createUserResponse.jsonPath().getJsonObject("id");
-        Integer userId2 = createUserResponse2.jsonPath().getJsonObject("id");
-
-        ResponseBody createPostResponse = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .body(postObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
-                .post("/blog/user/" + userId + "/post").body();
-
-        Integer postId = createPostResponse.jsonPath().getJsonObject("id");
-
         RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .body(postObj.toString()).expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when()
-                .post("/blog/user/" + userId2 + "/like/" + postId);
+                .expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when()
+                .post("/blog/user/" + 2000 + "/like/" + 1000);
+    }
+
+    @Test
+    public void shouldAllowToLikePostByConfirmedUser() {
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .expect().log().all().statusCode(HttpStatus.SC_OK).when()
+                .post("/blog/user/" + 3000 + "/like/" + 1000);
     }
 }
