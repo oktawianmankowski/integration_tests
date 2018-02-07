@@ -63,5 +63,30 @@ public class CreateUserTest extends FunctionalTests {
                 .post("/blog/user/" + userId + "/like/" + postId);
     }
 
+    @Test
+    public void shouldNotAllowToLikePostByNewUser() {
+        JSONObject userObj = new JSONObject().put("email", "tracy6@domain.com");
+        JSONObject userObj2 = new JSONObject().put("email", "tracy66@domain.com");
+        JSONObject postObj = new JSONObject().put("entry", "Post content");
+        ResponseBody createUserResponse = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .body(userObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
+                .post("/blog/user").body();
 
+        ResponseBody createUserResponse2 = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .body(userObj2.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
+                .post("/blog/user").body();
+
+        Integer userId = createUserResponse.jsonPath().getJsonObject("id");
+        Integer userId2 = createUserResponse2.jsonPath().getJsonObject("id");
+
+        ResponseBody createPostResponse = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .body(postObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
+                .post("/blog/user/" + userId + "/post").body();
+
+        Integer postId = createPostResponse.jsonPath().getJsonObject("id");
+
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .body(postObj.toString()).expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when()
+                .post("/blog/user/" + userId2 + "/like/" + postId);
+    }
 }
