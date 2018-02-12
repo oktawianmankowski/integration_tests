@@ -22,8 +22,7 @@ public class BlogPost extends BaseEntity {
     @Lob
     private String entry;
 
-    @OneToMany
-    @JoinColumn(name = "postId")
+    @OneToMany(mappedBy = "post")
     private List<LikePost> likes;
 
     public BlogPost() {}
