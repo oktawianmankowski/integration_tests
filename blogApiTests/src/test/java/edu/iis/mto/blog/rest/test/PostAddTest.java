@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
-public class PostTest extends FunctionalTests {
+public class PostAddTest extends FunctionalTests {
 
     @Test
     public void onlyConfirmedUserCanAddPost() {
