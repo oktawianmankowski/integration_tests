@@ -44,16 +44,14 @@ public class UserRepositoryTest {
 
         List<User> users = repository.findAll();
 
-        Assert.assertThat(users, Matchers.hasSize(1));
+        Assert.assertThat(users, Matchers.hasSize(4));
     }
 
     @Test
-    public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
-        User persistedUser = entityManager.persist(user);
+    public void shouldFindFourUsersIfRepositoryContainsFourUserEntity() {
         List<User> users = repository.findAll();
 
-        Assert.assertThat(users, Matchers.hasSize(2));
-        Assert.assertThat(users.get(1).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
+        Assert.assertThat(users, Matchers.hasSize(4));
     }
 
     @Test
