@@ -26,6 +26,7 @@ import java.util.List;
     public void setUp() {
         user = new User();
         user.setFirstName("Jan");
+        user.setLastName("Kowalski");
         user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
 
@@ -55,5 +56,52 @@ import java.util.List;
 
         Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
     }
+
+    @Test
+    public void shouldFindUserWithFirstName(){
+        User persistedUser = repository.save(user);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(persistedUser.getFirstName(), "","");
+
+        Assert.assertThat(users.size(), Matchers.greaterThan(0));
+    }
+
+    @Test
+    public void shouldFindUserWithLastName(){
+        User persistedUser = repository.save(user);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("", persistedUser.getLastName(),"");
+
+        Assert.assertThat(users.size(), Matchers.greaterThan(0));
+    }
+
+    @Test
+    public void shouldFindUserWithEmail(){
+        User persistedUser = repository.save(user);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("", "", persistedUser.getEmail());
+
+        Assert.assertThat(users, Matchers.hasSize(1));
+        Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
+    }
+
+    @Test
+    public void shouldFindUserWithFullData(){
+        User persistedUser = repository.save(user);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(persistedUser.getFirstName(), persistedUser.getLastName(),persistedUser.getEmail());
+
+        Assert.assertThat(users, Matchers.hasSize(1));
+        Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
+    }
+
+    @Test
+    public void shouldNotFindUser(){
+        String incorectFirstName = "Adam";
+        String incorectLastName = "Kamiński";
+        String incorectMail = "adam@kam.pl";
+        repository.save(user);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(incorectFirstName, incorectLastName,incorectMail);
+
+        Assert.assertThat(users, Matchers.hasSize(0));
+    }
+
+
 
 }

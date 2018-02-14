@@ -1,5 +1,11 @@
 package edu.iis.mto.blog.domain;
 
+import edu.iis.mto.blog.api.request.UserRequest;
+import edu.iis.mto.blog.domain.model.AccountStatus;
+import edu.iis.mto.blog.domain.model.User;
+import edu.iis.mto.blog.domain.repository.UserRepository;
+import edu.iis.mto.blog.mapper.DataMapper;
+import edu.iis.mto.blog.services.BlogService;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,25 +17,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.iis.mto.blog.api.request.UserRequest;
-import edu.iis.mto.blog.domain.model.AccountStatus;
-import edu.iis.mto.blog.domain.model.User;
-import edu.iis.mto.blog.domain.repository.UserRepository;
-import edu.iis.mto.blog.mapper.DataMapper;
-import edu.iis.mto.blog.services.BlogService;
+@RunWith(SpringRunner.class) @SpringBootTest public class BlogManagerTest {
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class BlogManagerTest {
+    @MockBean UserRepository userRepository;
 
-    @MockBean
-    UserRepository userRepository;
+    @Autowired DataMapper dataMapper;
 
-    @Autowired
-    DataMapper dataMapper;
-
-    @Autowired
-    BlogService blogService;
+    @Autowired BlogService blogService;
 
     @Test
     public void creatingNewUserShouldSetAccountStatusToNEW() {
