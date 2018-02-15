@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
+import edu.iis.mto.blog.domain.model.AccountStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +46,7 @@ public class BlogDataFinder extends DomainService implements DataFinder {
     @Override
     public List<PostData> getUserPosts(Long userId) {
         User user = userRepository.findOne(userId);
-        if (user == null) {
+        if (user == null || user.getAccountStatus() == AccountStatus.REMOVED) {
             throw new EntityNotFoundException(String.format("user with id %d does not exists", userId));
         }
         List<BlogPost> posts = blogPostRepository.findByUser(user);

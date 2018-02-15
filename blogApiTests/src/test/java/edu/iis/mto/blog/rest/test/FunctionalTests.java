@@ -111,7 +111,7 @@ public class FunctionalTests {
     public void searchPostOfDeleteUserShouldReturnNotFoundResponse(){
         RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
                 .expect().log().all().statusCode(HttpStatus.SC_NOT_FOUND).when()
-                .get("/blog/user/" + 18 + "/post");
+                .get("/blog/user/" + 5 + "/post");
 
     }
 
