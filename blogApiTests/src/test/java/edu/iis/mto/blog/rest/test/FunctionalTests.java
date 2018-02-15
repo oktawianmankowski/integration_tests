@@ -3,12 +3,10 @@ package edu.iis.mto.blog.rest.test;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.ResponseBody;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -75,35 +73,31 @@ public class FunctionalTests {
     }
 
     @Test
-    public void addLikeByConfirmedUserShouldReturnCreateStatus(){
-        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .expect().log().all().statusCode(HttpStatus.SC_OK).when()
-                .post("/blog/user/" + 2 + "/like/" + 1);
+    public void addLikeByConfirmedUserShouldReturnCreateStatus() {
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8").expect()
+                .log().all().statusCode(HttpStatus.SC_OK).when().post("/blog/user/" + 2 + "/like/" + 1);
     }
 
     @Test
-    public void addLikeByConfirmedUserToOwnShouldReturnBadRequestStatus(){
-        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when()
-                .post("/blog/user/" + 1 + "/like/" + 1);
+    public void addLikeByConfirmedUserToOwnShouldReturnBadRequestStatus() {
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8").expect()
+                .log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when().post("/blog/user/" + 1 + "/like/" + 1);
     }
 
     @Test
-    public void addLikeByNewUserShouldReturnBadRequestStatus(){
-        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when()
-                .post("/blog/user/" + 1 + "/like/" + 1);
+    public void addLikeByNewUserShouldReturnBadRequestStatus() {
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8").expect()
+                .log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when().post("/blog/user/" + 1 + "/like/" + 1);
     }
 
     @Test
-    public void addLikeTwiceBySameUserToSamePostShouldNotChangeLikeState(){
-        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .expect().log().all().statusCode(HttpStatus.SC_OK).when()
-                .post("/blog/user/" + 2 + "/like/" + 1);
+    public void addLikeTwiceBySameUserToSamePostShouldNotChangeLikeState() {
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8").expect()
+                .log().all().statusCode(HttpStatus.SC_OK).when().post("/blog/user/" + 2 + "/like/" + 1);
 
-        ResponseBody responseBody = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .expect().log().all().statusCode(HttpStatus.SC_OK).when()
-                .post("/blog/user/" + 2 + "/like/" + 1).getBody();
+        ResponseBody responseBody = RestAssured.given().accept(ContentType.JSON)
+                .header("Content-Type", "application/json;charset=UTF-8").expect().log().all()
+                .statusCode(HttpStatus.SC_OK).when().post("/blog/user/" + 2 + "/like/" + 1).getBody();
 
         String response = responseBody.print();
 
@@ -111,39 +105,53 @@ public class FunctionalTests {
     }
 
     @Test
-    public void searchPostOfDeleteUserShouldReturnNotFoundResponse(){
-        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .expect().log().all().statusCode(HttpStatus.SC_NOT_FOUND).when()
-                .get("/blog/user/" + 5 + "/post");
+    public void searchPostOfDeleteUserShouldReturnNotFoundResponse() {
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8").expect()
+                .log().all().statusCode(HttpStatus.SC_NOT_FOUND).when().get("/blog/user/" + 5 + "/post");
 
     }
 
     @Test
-    public void searchPostOfUserShouldReturnCorrectLikeCountForPost(){
+    public void searchPostOfUserShouldReturnCorrectLikeCountForPost() {
         int expectedLikescount = 1;
-        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .expect().log().all().statusCode(HttpStatus.SC_OK).when()
-                .post("/blog/user/" + 2 + "/like/" + 3);
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8").expect()
+                .log().all().statusCode(HttpStatus.SC_OK).when().post("/blog/user/" + 2 + "/like/" + 3);
 
-        ResponseBody responseBody = RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .expect().log().all().statusCode(HttpStatus.SC_OK).when()
-                .get("/blog/user/" + 4 + "/post").getBody();
+        ResponseBody responseBody = RestAssured.given().accept(ContentType.JSON)
+                .header("Content-Type", "application/json;charset=UTF-8").expect().log().all()
+                .statusCode(HttpStatus.SC_OK).when().get("/blog/user/" + 4 + "/post").getBody();
 
         JSONArray jsonArray = new JSONArray(responseBody.print());
         JSONObject jsonObject = jsonArray.getJSONObject(0);
-        int likesCount = (int)jsonObject.get("likesCount");
+        int likesCount = (int) jsonObject.get("likesCount");
 
         Assert.assertThat(likesCount, is(expectedLikescount));
     }
 
     @Test
-    public void searchActiveUserByStringSearchShouldReturnOkResponse(){
+    public void searchActiveUserByStringSearchShouldReturnOkResponse() {
         Map<String, String> map = new HashMap<String, String>();
         map.put("searchString", "John");
 
-        RestAssured.given().parameters(map).accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
-                .expect().log().all().statusCode(HttpStatus.SC_OK).when()
-                .get("/blog/user/find");
+        RestAssured.given().parameters(map).accept(ContentType.JSON)
+                .header("Content-Type", "application/json;charset=UTF-8").expect().log().all()
+                .statusCode(HttpStatus.SC_OK).when().get("/blog/user/find");
+    }
+
+    @Test
+    public void searchUserByStringSearchShouldReturnOnlyNotRemovedUser() {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("searchString", "Will");
+
+        RestAssured.given().parameters(map).accept(ContentType.JSON)
+                .header("Content-Type", "application/json;charset=UTF-8").expect().log().all()
+                .statusCode(HttpStatus.SC_OK).when().get("/blog/user/find");
+    }
+
+    @Test
+    public void searchRemovedUserByIDSearchShouldReturnNoFoundResponse() {
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8").expect()
+                .log().all().statusCode(HttpStatus.SC_NOT_FOUND).when().get("/blog/user/" + 5);
     }
 
 }
