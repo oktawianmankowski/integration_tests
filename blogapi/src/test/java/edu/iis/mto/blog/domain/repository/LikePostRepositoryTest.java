@@ -72,7 +72,7 @@ import java.util.Optional;
     }
 
     @Test
-    public void shouldModyfiLikePost() {
+    public void shouldModifyLikePost() {
         userRepository.save(user);
         blogPostRepository.save(blogPost);
         likePostRepository.save(likePost);
