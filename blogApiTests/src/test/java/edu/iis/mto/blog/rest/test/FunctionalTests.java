@@ -50,7 +50,7 @@ public class FunctionalTests {
     }
 
     @Test
-    public void AddPostByConfirmedUserShouldReturnCreateStatus() {
+    public void addPostByConfirmedUserShouldReturnCreateStatus() {
         JSONObject jsonObj = new JSONObject().put("entry", "Post");
         RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
                 .body(jsonObj.toString()).expect().log().all().statusCode(HttpStatus.SC_CREATED).when()
@@ -58,11 +58,32 @@ public class FunctionalTests {
     }
 
     @Test
-    public void AddPostByNewUserShouldReturnBadRequestStatus() {
+    public void addPostByNewUserShouldReturnBadRequestStatus() {
         JSONObject jsonObj = new JSONObject().put("entry", "Post");
         RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
                 .body(jsonObj.toString()).expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when()
-                .post("/blog/user/" + 2 + "/post");
+                .post("/blog/user/" + 3 + "/post");
+    }
+
+    @Test
+    public void addLikeByConfirmedUserShouldReturnCreateStatus(){
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .expect().log().all().statusCode(HttpStatus.SC_OK).when()
+                .post("/blog/user/" + 2 + "/like/" + 1);
+    }
+
+    @Test
+    public void addLikeByConfirmedUserToOwnShouldReturnBadRequestStatus(){
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when()
+                .post("/blog/user/" + 1 + "/like/" + 1);
+    }
+
+    @Test
+    public void addLikeByNewUserShouldReturnBadRequestStatus(){
+        RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .expect().log().all().statusCode(HttpStatus.SC_BAD_REQUEST).when()
+                .post("/blog/user/" + 1 + "/like/" + 1);
     }
 
 }
