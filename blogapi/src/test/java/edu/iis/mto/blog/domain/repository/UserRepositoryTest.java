@@ -14,7 +14,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-@RunWith(SpringRunner.class) @DataJpaTest public class UserRepositoryTest {
+@RunWith(SpringRunner.class)
+@DataJpaTest
+public class UserRepositoryTest {
 
     @Autowired private TestEntityManager entityManager;
 
