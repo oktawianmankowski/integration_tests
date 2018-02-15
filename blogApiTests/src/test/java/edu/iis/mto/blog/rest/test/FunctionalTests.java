@@ -12,6 +12,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.is;
 
 public class FunctionalTests {
@@ -116,7 +119,7 @@ public class FunctionalTests {
     }
 
     @Test
-    public void searchPostOfUserShouldReturnCorrectLikeCountForpost(){
+    public void searchPostOfUserShouldReturnCorrectLikeCountForPost(){
         int expectedLikescount = 1;
         RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
                 .expect().log().all().statusCode(HttpStatus.SC_OK).when()
@@ -131,7 +134,16 @@ public class FunctionalTests {
         int likesCount = (int)jsonObject.get("likesCount");
 
         Assert.assertThat(likesCount, is(expectedLikescount));
+    }
 
+    @Test
+    public void searchActiveUserByStringSearchShouldReturnOkResponse(){
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("searchString", "John");
+
+        RestAssured.given().parameters(map).accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
+                .expect().log().all().statusCode(HttpStatus.SC_OK).when()
+                .get("/blog/user/find");
     }
 
 }
