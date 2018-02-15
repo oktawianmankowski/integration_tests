@@ -35,12 +35,7 @@ public class BlogDataFinder extends DomainService implements DataFinder {
         List<User> users = userRepository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
                 searchString, searchString, searchString);
 
-        for (Iterator<User> iter = users.listIterator(); iter.hasNext();) {
-            User user = iter.next();
-            if (user.getAccountStatus() == AccountStatus.REMOVED){
-                iter.remove();
-            }
-        }
+        users.removeIf(user -> user.getAccountStatus() == AccountStatus.REMOVED);
         if (users.size() == 0){
             throw new EntityNotFoundException("user does not exists");
         }
