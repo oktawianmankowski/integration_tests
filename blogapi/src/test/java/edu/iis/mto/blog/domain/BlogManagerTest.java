@@ -1,6 +1,7 @@
 package edu.iis.mto.blog.domain;
 
 import edu.iis.mto.blog.api.request.UserRequest;
+import edu.iis.mto.blog.domain.errors.DomainError;
 import edu.iis.mto.blog.domain.model.AccountStatus;
 import edu.iis.mto.blog.domain.model.BlogPost;
 import edu.iis.mto.blog.domain.model.LikePost;
@@ -35,8 +36,11 @@ import java.util.List;
 
     @Before
     public void init() {
-        userRepository.deleteAllInBatch();
+        likePostRepository.deleteAllInBatch();
         blogPostRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+
+
     }
 
     @Test
@@ -71,6 +75,30 @@ import java.util.List;
         List<LikePost> likePostList = likePostRepository.findAll();
 
         Assert.assertThat(likePostList, Matchers.hasSize(1));
+
+    }
+
+    @Test (expected = DomainError.class)
+    public void addLikeToPostShouldNotDoneByNotConfirmedAccounts() {
+        User user = new User();
+        user.setFirstName("Damian");
+        user.setEmail("damian@test.pl");
+        user.setAccountStatus(AccountStatus.CONFIRMED);
+        userRepository.save(user);
+
+        User userMod = new User();
+        userMod.setFirstName("Jan");
+        userMod.setLastName("Kowalski");
+        userMod.setEmail("john@domain.com");
+        userMod.setAccountStatus(AccountStatus.NEW);
+        userRepository.save(userMod);
+
+        BlogPost blogPost = new BlogPost();
+        blogPost.setEntry("entry");
+        blogPost.setUser(user);
+        blogPostRepository.save(blogPost);
+
+        blogService.addLikeToPost(userMod.getId(), blogPost.getId());
 
     }
 }
