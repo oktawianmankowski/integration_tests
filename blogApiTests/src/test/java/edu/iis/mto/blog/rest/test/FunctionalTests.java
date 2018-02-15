@@ -1,8 +1,7 @@
 package edu.iis.mto.blog.rest.test;
 
-import org.junit.BeforeClass;
-
 import com.jayway.restassured.RestAssured;
+import org.junit.BeforeClass;
 
 public class FunctionalTests {
 
