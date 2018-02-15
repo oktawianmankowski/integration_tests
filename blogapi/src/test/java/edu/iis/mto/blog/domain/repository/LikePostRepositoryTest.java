@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class) @DataJpaTest public class LikePostRepositoryTest {
 
@@ -88,6 +89,28 @@ import java.util.List;
 
         Assert.assertThat(likePosts, Matchers.hasSize(1));
         Assert.assertThat(likePosts.get(0).getUser().getEmail(), Matchers.equalTo(userMod.getEmail()));
+    }
+
+    @Test
+    public void shouldFindByUserAndPost() {
+        userRepository.save(user);
+        blogPostRepository.save(blogPost);
+        likePostRepository.save(likePost);
+
+        Optional<LikePost> likePostOptional = likePostRepository.findByUserAndPost(user, blogPost);
+
+        Assert.assertTrue(likePostOptional.isPresent());
+    }
+
+    @Test
+    public void shouldNotFindByUserAndPost() {
+        userRepository.save(user);
+        blogPostRepository.save(blogPost);
+        likePostRepository.save(likePost);
+
+        Optional<LikePost> likePostOptional = likePostRepository.findByUserAndPost(user, null);
+
+        Assert.assertFalse(likePostOptional.isPresent());
     }
 
 }
