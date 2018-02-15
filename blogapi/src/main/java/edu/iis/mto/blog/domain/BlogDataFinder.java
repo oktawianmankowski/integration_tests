@@ -45,6 +45,9 @@ public class BlogDataFinder extends DomainService implements DataFinder {
     @Override
     public List<PostData> getUserPosts(Long userId) {
         User user = userRepository.findOne(userId);
+        if (user == null) {
+            throw new EntityNotFoundException(String.format("user with id %d does not exists", userId));
+        }
         List<BlogPost> posts = blogPostRepository.findByUser(user);
         return posts.stream().map(post -> mapper.mapToDto(post)).collect(Collectors.toList());
     }
