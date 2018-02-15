@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SearchUserTest {
+public class SearchUserTest extends FunctionalTests{
 
     @Test
     public void searchActiveUserByStringSearchShouldReturnOkResponse() {

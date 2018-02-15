@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 
-public class SearchPostTest {
+public class SearchPostTest extends FunctionalTests{
 
     @Test
     public void searchPostOfDeleteUserShouldReturnNotFoundResponse() {
