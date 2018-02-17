@@ -47,6 +47,7 @@ public class UserRepositoryTest {
 
     @Test
     public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
+        repository.deleteAllInBatch();
         User persistedUser = entityManager.persist(user);
         List<User> users = repository.findAll();
 
