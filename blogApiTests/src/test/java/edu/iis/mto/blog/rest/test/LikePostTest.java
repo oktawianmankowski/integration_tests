@@ -14,7 +14,7 @@ public class LikePostTest extends FunctionalTests {
 		JSONObject jsonObject = new JSONObject().put("entry", "Entry");
 		RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
 				.body(jsonObject.toString()).expect().log().all().statusCode(HttpStatus.SC_OK).when()
-				.post("/blog/user/1/like/2");
+				.post("/blog/user/3/like/1");
 	}
 
 	@Test
@@ -38,9 +38,9 @@ public class LikePostTest extends FunctionalTests {
 		JSONObject jsonObject = new JSONObject().put("entry", "Entry");
 		RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
 				.body(jsonObject.toString()).expect().log().all().statusCode(HttpStatus.SC_OK).when()
-				.post("/blog/user/1/like/2");
+				.post("/blog/user/3/like/1");
 		RestAssured.given().accept(ContentType.JSON).header("Content-Type", "application/json;charset=UTF-8")
 		.body(jsonObject.toString()).expect().log().all().statusCode(HttpStatus.SC_OK).when()
-		.post("/blog/user/1/like/2");
+		.post("/blog/user/3/like/1");
 	}
 }
