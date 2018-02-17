@@ -78,7 +78,7 @@ public class UserRepositoryTest {
         List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
                 "tom...", "doe", "tomdoe@domain.com...");
 
-        Assert.assertThat(users.get(0).getFirstName(), Matchers.is(user.getFirstName()));
+        Assert.assertThat(users.get(0).getLastName(), Matchers.is(user.getLastName()));
     }
 
     @Test
@@ -87,7 +87,16 @@ public class UserRepositoryTest {
         List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
                 "tom...", "doe...", "tomdoe@domain.com");
 
-        Assert.assertThat(users.get(0).getFirstName(), Matchers.is(user.getFirstName()));
+        Assert.assertThat(users.get(0).getEmail(), Matchers.is(user.getEmail()));
+    }
+
+    @Test
+    public void returnTrueWhenFindNoUserIfFirstNameOrLastNameOrEmailAddressIsNotProperly() {
+        repository.save(user);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+                "tom...", "doe...", "tomdoe@domain.com...");
+
+        Assert.assertNotSame(users, Matchers.nullValue());
     }
 
 }
