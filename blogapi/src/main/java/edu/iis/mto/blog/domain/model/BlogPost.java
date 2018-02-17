@@ -12,48 +12,49 @@ import javax.persistence.OneToMany;
 @Entity
 public class BlogPost extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
-    private User user;
+	@ManyToOne
+	@JoinColumn(name = "userId", nullable = false)
+	private User user;
 
-    @Column(columnDefinition = "CLOB NOT NULL")
-    @Lob
-    private String entry;
+	@Column(columnDefinition = "CLOB NOT NULL")
+	@Lob
+	private String entry;
 
-    @OneToMany
-    @JoinColumn(name = "postId")
-    private List<LikePost> likes;
+	@OneToMany
+	@JoinColumn(name = "postId")
+	private List<LikePost> likes;
 
-    public BlogPost() {}
+	public BlogPost() {
+	}
 
-    public User getUser() {
-        return user;
-    }
+	public User getUser() {
+		return user;
+	}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public void setUser(User user) {
+		this.user = user;
+	}
 
-    public String getEntry() {
-        return entry;
-    }
+	public String getEntry() {
+		return entry;
+	}
 
-    public void setEntry(String entry) {
-        this.entry = entry;
-    }
+	public void setEntry(String entry) {
+		this.entry = entry;
+	}
 
-    public void setLikes(List<LikePost> likes) {
-        this.likes = likes;
-    }
+	public void setLikes(List<LikePost> likes) {
+		this.likes = likes;
+	}
 
-    public List<LikePost> getLikes() {
-        return likes;
-    }
+	public List<LikePost> getLikes() {
+		return likes;
+	}
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
-    }
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 }

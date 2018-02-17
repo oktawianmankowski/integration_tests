@@ -1,11 +1,12 @@
 package edu.iis.mto.blog.domain.repository;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,48 +21,90 @@ import edu.iis.mto.blog.domain.model.User;
 @DataJpaTest
 public class UserRepositoryTest {
 
-    @Autowired
-    private TestEntityManager entityManager;
+	private static final String FIRST_NAME = "Jan";
+	private static final String LAST_NAME = "Kowalski";
+	private static final String EMAIL = "jan@kowalski.com";
 
-    @Autowired
-    private UserRepository repository;
+	@Autowired
+	private TestEntityManager entityManager;
 
-    private User user;
+	@Autowired
+	private UserRepository repository;
 
-    @Before
-    public void setUp() {
-        user = new User();
-        user.setFirstName("Jan");
-        user.setEmail("john@domain.com");
-        user.setAccountStatus(AccountStatus.NEW);
-    }
+	private User user;
 
-    @Ignore
-    @Test
-    public void shouldFindNoUsersIfRepositoryIsEmpty() {
+	@Before
+	public void setUp() {
+		user = new User();
+		user.setFirstName(FIRST_NAME);
+		user.setLastName(LAST_NAME);
+		user.setEmail(EMAIL);
+		user.setAccountStatus(AccountStatus.NEW);
+		repository.deleteAllInBatch();
+	}
 
-        List<User> users = repository.findAll();
+	@Test
+	public void shouldFindNoUsersIfRepositoryIsEmpty() {
 
-        Assert.assertThat(users, Matchers.hasSize(0));
-    }
+		List<User> users = repository.findAll();
 
-    @Ignore
-    @Test
-    public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
-        User persistedUser = entityManager.persist(user);
-        List<User> users = repository.findAll();
+		Assert.assertThat(users, Matchers.hasSize(0));
+	}
 
-        Assert.assertThat(users, Matchers.hasSize(1));
-        Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
-    }
+	@Test
+	public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
+		User persistedUser = entityManager.persist(user);
+		List<User> users = repository.findAll();
 
-    @Ignore
-    @Test
-    public void shouldStoreANewUser() {
+		Assert.assertThat(users, Matchers.hasSize(1));
+		Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
+	}
 
-        User persistedUser = repository.save(user);
+	@Test
+	public void shouldStoreANewUser() {
 
-        Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
-    }
+		User persistedUser = repository.save(user);
+
+		Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
+	}
+
+	@Test
+	public void shouldFindUserByCorrectFirstName() {
+		repository.save(user);
+		List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+				FIRST_NAME, LAST_NAME, EMAIL);
+
+		assertEquals(1, users.size());
+		assertEquals(FIRST_NAME, users.get(0).getFirstName());
+	}
+
+	@Test
+	public void shouldFindUserByCorrectLastName() {
+		repository.save(user);
+		List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+				FIRST_NAME, LAST_NAME, EMAIL);
+
+		assertEquals(1, users.size());
+		assertEquals(LAST_NAME, users.get(0).getLastName());
+	}
+
+	@Test
+	public void shouldFindUserByCorrectEmail() {
+		repository.save(user);
+		List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+				FIRST_NAME, LAST_NAME, EMAIL);
+
+		assertEquals(1, users.size());
+		assertEquals(EMAIL, users.get(0).getEmail());
+	}
+
+	@Test
+	public void shouldNotFindIncorrectUser() {
+		repository.save(user);
+		List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+				"Adam", "Nowak", "adam@nowak.com");
+
+		assertEquals(0, users.size());
+	}
 
 }

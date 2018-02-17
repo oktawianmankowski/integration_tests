@@ -7,30 +7,30 @@ import javax.persistence.ManyToOne;
 @Entity
 public class LikePost extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
-    private User user;
+	@ManyToOne
+	@JoinColumn(name = "userId", nullable = false)
+	private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "postId", nullable = false)
-    private BlogPost post;
+	@ManyToOne
+	@JoinColumn(name = "postId", nullable = false)
+	private BlogPost post;
 
-    public User getUser() {
-        return user;
-    }
+	public User getUser() {
+		return user;
+	}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public void setUser(User user) {
+		this.user = user;
+	}
 
-    public BlogPost getPost() {
-        return post;
-    }
+	public BlogPost getPost() {
+		return post;
+	}
 
-    public void setPost(BlogPost post) {
-        this.post = post;
-    }
+	public void setPost(BlogPost post) {
+		this.post = post;
+	}
 
 }

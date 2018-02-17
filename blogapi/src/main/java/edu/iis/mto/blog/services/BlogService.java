@@ -5,10 +5,10 @@ import edu.iis.mto.blog.api.request.UserRequest;
 
 public interface BlogService {
 
-    Long createUser(UserRequest userRequest);
+	Long createUser(UserRequest userRequest);
 
-    Long createPost(Long userId, PostRequest postRequest);
+	Long createPost(Long userId, PostRequest postRequest);
 
-    boolean addLikeToPost(Long userId, Long postId);
+	boolean addLikeToPost(Long userId, Long postId);
 
 }

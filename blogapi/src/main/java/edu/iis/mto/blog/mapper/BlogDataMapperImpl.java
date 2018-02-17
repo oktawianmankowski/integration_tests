@@ -14,42 +14,42 @@ import edu.iis.mto.blog.dto.UserData;
 @Component
 public class BlogDataMapperImpl implements DataMapper {
 
-    private final ModelMapper mapper = new ModelMapper();
+	private final ModelMapper mapper = new ModelMapper();
 
-    public BlogDataMapperImpl() {
-        configureMapper();
-    }
+	public BlogDataMapperImpl() {
+		configureMapper();
+	}
 
-    @Override
-    public User mapToEntity(UserRequest userRequest) {
-        return mapper.map(userRequest, User.class);
-    }
+	@Override
+	public User mapToEntity(UserRequest userRequest) {
+		return mapper.map(userRequest, User.class);
+	}
 
-    @Override
-    public BlogPost mapToEntity(PostRequest postRequest) {
-        return mapper.map(postRequest, BlogPost.class);
-    }
+	@Override
+	public BlogPost mapToEntity(PostRequest postRequest) {
+		return mapper.map(postRequest, BlogPost.class);
+	}
 
-    @Override
-    public UserData mapToDto(User user) {
-        return mapper.map(user, UserData.class);
-    }
+	@Override
+	public UserData mapToDto(User user) {
+		return mapper.map(user, UserData.class);
+	}
 
-    @Override
-    public PostData mapToDto(BlogPost blogPost) {
-        return mapper.map(blogPost, PostData.class);
-    }
+	@Override
+	public PostData mapToDto(BlogPost blogPost) {
+		return mapper.map(blogPost, PostData.class);
+	}
 
-    private void configureMapper() {
-        PropertyMap<BlogPost, PostData> postMap = new PropertyMap<BlogPost, PostData>() {
+	private void configureMapper() {
+		PropertyMap<BlogPost, PostData> postMap = new PropertyMap<BlogPost, PostData>() {
 
-            @Override
-            protected void configure() {
-                map().setLikesCount(source.getLikes().size());
+			@Override
+			protected void configure() {
+				map().setLikesCount(source.getLikes().size());
 
-            }
-        };
-        mapper.addMappings(postMap);
-    }
+			}
+		};
+		mapper.addMappings(postMap);
+	}
 
 }

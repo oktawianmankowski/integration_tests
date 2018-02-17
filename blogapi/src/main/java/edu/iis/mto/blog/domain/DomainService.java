@@ -9,15 +9,15 @@ import edu.iis.mto.blog.mapper.DataMapper;
 
 public abstract class DomainService {
 
-    @Autowired
-    protected UserRepository userRepository;
+	@Autowired
+	protected UserRepository userRepository;
 
-    @Autowired
-    protected BlogPostRepository blogPostRepository;
+	@Autowired
+	protected BlogPostRepository blogPostRepository;
 
-    @Autowired
-    protected LikePostRepository likePostRepository;
+	@Autowired
+	protected LikePostRepository likePostRepository;
 
-    @Autowired
-    protected DataMapper mapper;
+	@Autowired
+	protected DataMapper mapper;
 }

@@ -17,25 +17,25 @@ import edu.iis.mto.blog.domain.errors.DomainError;
 @ControllerAdvice
 public class ErrorHandling {
 
-    private final static Logger logger = LoggerFactory.getLogger(ErrorHandling.class);
+	private final static Logger logger = LoggerFactory.getLogger(ErrorHandling.class);
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public void dataIntegrityException(DataIntegrityViolationException exc, HttpServletResponse response)
-            throws IOException {
-        logger.error(exc.getMessage());
-        response.sendError(HttpStatus.CONFLICT.value(), exc.getMessage());
-    }
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public void dataIntegrityException(DataIntegrityViolationException exc, HttpServletResponse response)
+			throws IOException {
+		logger.error(exc.getMessage());
+		response.sendError(HttpStatus.CONFLICT.value(), exc.getMessage());
+	}
 
-    @ExceptionHandler(DomainError.class)
-    public void domainError(DomainError exc, HttpServletResponse response) throws IOException {
-        logger.error(exc.getMessage());
-        response.sendError(HttpStatus.BAD_REQUEST.value(), exc.getMessage());
-    }
+	@ExceptionHandler(DomainError.class)
+	public void domainError(DomainError exc, HttpServletResponse response) throws IOException {
+		logger.error(exc.getMessage());
+		response.sendError(HttpStatus.BAD_REQUEST.value(), exc.getMessage());
+	}
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public void entityNotFound(EntityNotFoundException exc, HttpServletResponse response) throws IOException {
-        logger.error(exc.getMessage());
-        response.sendError(HttpStatus.NOT_FOUND.value(), exc.getMessage());
-    }
+	@ExceptionHandler(EntityNotFoundException.class)
+	public void entityNotFound(EntityNotFoundException exc, HttpServletResponse response) throws IOException {
+		logger.error(exc.getMessage());
+		response.sendError(HttpStatus.NOT_FOUND.value(), exc.getMessage());
+	}
 
 }

@@ -8,7 +8,7 @@ import edu.iis.mto.blog.domain.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    List<User> findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(String firstName,
-            String lastName, String email);
+	List<User> findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(String firstName,
+			String lastName, String email);
 
 }
