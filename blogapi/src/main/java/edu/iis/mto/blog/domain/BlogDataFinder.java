@@ -19,34 +19,34 @@ import edu.iis.mto.blog.services.DataFinder;
 @Service
 public class BlogDataFinder extends DomainService implements DataFinder {
 
-    @Override
-    public UserData getUserData(Long userId) {
-        User user = userRepository.findOne(userId);
-        if (user == null) {
-            throw new EntityNotFoundException(String.format("user with id %1 does not exists", userId));
-        }
-        return mapper.mapToDto(user);
-    }
+	@Override
+	public UserData getUserData(Long userId) {
+		User user = userRepository.findOne(userId);
+		if (user == null) {
+			throw new EntityNotFoundException(String.format("user with id %1 does not exists", userId));
+		}
+		return mapper.mapToDto(user);
+	}
 
-    @Override
-    public List<UserData> findUsers(String searchString) {
-        List<User> users = userRepository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
-                searchString, searchString, searchString);
+	@Override
+	public List<UserData> findUsers(String searchString) {
+		List<User> users = userRepository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+				searchString, searchString, searchString);
 
-        return users.stream().map(user -> mapper.mapToDto(user)).collect(Collectors.toList());
-    }
+		return users.stream().map(user -> mapper.mapToDto(user)).collect(Collectors.toList());
+	}
 
-    @Override
-    public PostData getPost(Long userId) {
-        BlogPost blogPost = blogPostRepository.findOne(userId);
-        return mapper.mapToDto(blogPost);
-    }
+	@Override
+	public PostData getPost(Long userId) {
+		BlogPost blogPost = blogPostRepository.findOne(userId);
+		return mapper.mapToDto(blogPost);
+	}
 
-    @Override
-    public List<PostData> getUserPosts(Long userId) {
-        User user = userRepository.findOne(userId);
-        List<BlogPost> posts = blogPostRepository.findByUser(user);
-        return posts.stream().map(post -> mapper.mapToDto(post)).collect(Collectors.toList());
-    }
+	@Override
+	public List<PostData> getUserPosts(Long userId) {
+		User user = userRepository.findOne(userId);
+		List<BlogPost> posts = blogPostRepository.findByUser(user);
+		return posts.stream().map(post -> mapper.mapToDto(post)).collect(Collectors.toList());
+	}
 
 }

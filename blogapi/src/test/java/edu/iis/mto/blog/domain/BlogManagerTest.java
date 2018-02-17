@@ -22,22 +22,22 @@ import edu.iis.mto.blog.services.BlogService;
 @SpringBootTest
 public class BlogManagerTest {
 
-    @MockBean
-    UserRepository userRepository;
+	@MockBean
+	UserRepository userRepository;
 
-    @Autowired
-    DataMapper dataMapper;
+	@Autowired
+	DataMapper dataMapper;
 
-    @Autowired
-    BlogService blogService;
+	@Autowired
+	BlogService blogService;
 
-    @Test
-    public void creatingNewUserShouldSetAccountStatusToNEW() {
-        blogService.createUser(new UserRequest("John", "Steward", "john@domain.com"));
-        ArgumentCaptor<User> userParam = ArgumentCaptor.forClass(User.class);
-        Mockito.verify(userRepository).save(userParam.capture());
-        User user = userParam.getValue();
-        Assert.assertThat(user.getAccountStatus(), Matchers.equalTo(AccountStatus.NEW));
-    }
+	@Test
+	public void creatingNewUserShouldSetAccountStatusToNEW() {
+		blogService.createUser(new UserRequest("John", "Steward", "john@domain.com"));
+		ArgumentCaptor<User> userParam = ArgumentCaptor.forClass(User.class);
+		Mockito.verify(userRepository).save(userParam.capture());
+		User user = userParam.getValue();
+		Assert.assertThat(user.getAccountStatus(), Matchers.equalTo(AccountStatus.NEW));
+	}
 
 }

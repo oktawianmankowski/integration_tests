@@ -7,12 +7,12 @@ import edu.iis.mto.blog.dto.UserData;
 
 public interface DataFinder {
 
-    UserData getUserData(Long userId);
+	UserData getUserData(Long userId);
 
-    List<UserData> findUsers(String searchString);
+	List<UserData> findUsers(String searchString);
 
-    PostData getPost(Long userId);
+	PostData getPost(Long userId);
 
-    List<PostData> getUserPosts(Long userId);
+	List<PostData> getUserPosts(Long userId);
 
 }

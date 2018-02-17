@@ -20,48 +20,48 @@ import edu.iis.mto.blog.domain.model.User;
 @DataJpaTest
 public class UserRepositoryTest {
 
-    @Autowired
-    private TestEntityManager entityManager;
+	@Autowired
+	private TestEntityManager entityManager;
 
-    @Autowired
-    private UserRepository repository;
+	@Autowired
+	private UserRepository repository;
 
-    private User user;
+	private User user;
 
-    @Before
-    public void setUp() {
-        user = new User();
-        user.setFirstName("Jan");
-        user.setEmail("john@domain.com");
-        user.setAccountStatus(AccountStatus.NEW);
-    }
+	@Before
+	public void setUp() {
+		user = new User();
+		user.setFirstName("Jan");
+		user.setEmail("john@domain.com");
+		user.setAccountStatus(AccountStatus.NEW);
+	}
 
-    @Ignore
-    @Test
-    public void shouldFindNoUsersIfRepositoryIsEmpty() {
+	@Ignore
+	@Test
+	public void shouldFindNoUsersIfRepositoryIsEmpty() {
 
-        List<User> users = repository.findAll();
+		List<User> users = repository.findAll();
 
-        Assert.assertThat(users, Matchers.hasSize(0));
-    }
+		Assert.assertThat(users, Matchers.hasSize(0));
+	}
 
-    @Ignore
-    @Test
-    public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
-        User persistedUser = entityManager.persist(user);
-        List<User> users = repository.findAll();
+	@Ignore
+	@Test
+	public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
+		User persistedUser = entityManager.persist(user);
+		List<User> users = repository.findAll();
 
-        Assert.assertThat(users, Matchers.hasSize(1));
-        Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
-    }
+		Assert.assertThat(users, Matchers.hasSize(1));
+		Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
+	}
 
-    @Ignore
-    @Test
-    public void shouldStoreANewUser() {
+	@Ignore
+	@Test
+	public void shouldStoreANewUser() {
 
-        User persistedUser = repository.save(user);
+		User persistedUser = repository.save(user);
 
-        Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
-    }
+		Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
+	}
 
 }

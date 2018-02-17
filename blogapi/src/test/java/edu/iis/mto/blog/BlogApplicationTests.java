@@ -11,7 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ComponentScan("edu.iis.mto.blog.domain")
 public class BlogApplicationTests {
 
-    @Test
-    public void contextLoads() {}
+	@Test
+	public void contextLoads() {
+	}
 
 }

@@ -9,6 +9,6 @@ import edu.iis.mto.blog.domain.model.User;
 
 public interface BlogPostRepository extends JpaRepository<BlogPost, Long> {
 
-    List<BlogPost> findByUser(User user);
+	List<BlogPost> findByUser(User user);
 
 }

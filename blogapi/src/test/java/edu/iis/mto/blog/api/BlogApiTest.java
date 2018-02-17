@@ -26,32 +26,32 @@ import edu.iis.mto.blog.services.DataFinder;
 @WebMvcTest(BlogApi.class)
 public class BlogApiTest {
 
-    @Autowired
-    private MockMvc mvc;
+	@Autowired
+	private MockMvc mvc;
 
-    @MockBean
-    private BlogService blogService;
+	@MockBean
+	private BlogService blogService;
 
-    @MockBean
-    private DataFinder finder;
+	@MockBean
+	private DataFinder finder;
 
-    @Test
-    public void postBlogUserShouldResponseWithStatusCreatedAndNewUserId() throws Exception {
-        Long newUserId = 1L;
-        UserRequest user = new UserRequest();
-        user.setEmail("john@domain.com");
-        user.setFirstName("John");
-        user.setLastName("Steward");
-        Mockito.when(blogService.createUser(user)).thenReturn(newUserId);
-        String content = writeJson(user);
+	@Test
+	public void postBlogUserShouldResponseWithStatusCreatedAndNewUserId() throws Exception {
+		Long newUserId = 1L;
+		UserRequest user = new UserRequest();
+		user.setEmail("john@domain.com");
+		user.setFirstName("John");
+		user.setLastName("Steward");
+		Mockito.when(blogService.createUser(user)).thenReturn(newUserId);
+		String content = writeJson(user);
 
-        mvc.perform(post("/blog/user").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8).content(content)).andExpect(status().isCreated())
-                .andExpect(content().string(writeJson(new Id(newUserId))));
-    }
+		mvc.perform(post("/blog/user").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.accept(MediaType.APPLICATION_JSON_UTF8).content(content)).andExpect(status().isCreated())
+				.andExpect(content().string(writeJson(new Id(newUserId))));
+	}
 
-    private String writeJson(Object obj) throws JsonProcessingException {
-        return new ObjectMapper().writer().writeValueAsString(obj);
-    }
+	private String writeJson(Object obj) throws JsonProcessingException {
+		return new ObjectMapper().writer().writeValueAsString(obj);
+	}
 
 }

@@ -10,6 +10,6 @@ import edu.iis.mto.blog.domain.model.User;
 
 public interface LikePostRepository extends JpaRepository<LikePost, Long> {
 
-    Optional<LikePost> findByUserAndPost(User user, BlogPost post);
+	Optional<LikePost> findByUserAndPost(User user, BlogPost post);
 
 }

@@ -9,12 +9,12 @@ import edu.iis.mto.blog.dto.UserData;
 
 public interface DataMapper {
 
-    User mapToEntity(UserRequest userRequest);
+	User mapToEntity(UserRequest userRequest);
 
-    BlogPost mapToEntity(PostRequest postRequest);
+	BlogPost mapToEntity(PostRequest postRequest);
 
-    UserData mapToDto(User user);
+	UserData mapToDto(User user);
 
-    PostData mapToDto(BlogPost blogPost);
+	PostData mapToDto(BlogPost blogPost);
 
 }
