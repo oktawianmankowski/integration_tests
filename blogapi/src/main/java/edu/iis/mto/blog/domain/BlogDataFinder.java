@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.iis.mto.blog.domain.errors.DomainError;
+import edu.iis.mto.blog.domain.model.AccountStatus;
 import edu.iis.mto.blog.domain.model.BlogPost;
 import edu.iis.mto.blog.domain.model.User;
 import edu.iis.mto.blog.dto.PostData;
@@ -45,6 +47,9 @@ public class BlogDataFinder extends DomainService implements DataFinder {
 	@Override
 	public List<PostData> getUserPosts(Long userId) {
 		User user = userRepository.findOne(userId);
+		if (user.getAccountStatus().equals(AccountStatus.REMOVED)) {
+			throw new DomainError("Account has been removed");
+		}
 		List<BlogPost> posts = blogPostRepository.findByUser(user);
 		return posts.stream().map(post -> mapper.mapToDto(post)).collect(Collectors.toList());
 	}
