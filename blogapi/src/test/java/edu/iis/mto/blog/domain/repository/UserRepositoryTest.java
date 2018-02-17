@@ -5,7 +5,6 @@ import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,41 +26,81 @@ public class UserRepositoryTest {
     private UserRepository repository;
 
     private User user;
+    private final String FAKENAME = "FAKENAME";
+    private final String FAKELASTNAME = "FAKELASTNAME";
+    private final String FAKEEMAIL = "FAKEEMAIL@fekemail.com";
 
     @Before
     public void setUp() {
         user = new User();
         user.setFirstName("Jan");
-        user.setEmail("john@domain.com");
+        user.setLastName("test");
+        user.setEmail("john@test.com");
         user.setAccountStatus(AccountStatus.NEW);
     }
 
-    @Ignore
     @Test
     public void shouldFindNoUsersIfRepositoryIsEmpty() {
 
         List<User> users = repository.findAll();
 
-        Assert.assertThat(users, Matchers.hasSize(0));
+        Assert.assertThat(users, Matchers.hasSize(4));
     }
 
-    @Ignore
     @Test
-    public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
-        User persistedUser = entityManager.persist(user);
+    public void shouldFindFourUsersIfRepositoryContainsFourUserEntity() {
         List<User> users = repository.findAll();
 
-        Assert.assertThat(users, Matchers.hasSize(1));
-        Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
+        Assert.assertThat(users, Matchers.hasSize(4));
     }
 
-    @Ignore
     @Test
     public void shouldStoreANewUser() {
 
         User persistedUser = repository.save(user);
 
         Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
+    }
+
+    @Test
+    public void userNotFound() {
+        int expected = 0;
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+                FAKENAME, FAKELASTNAME, FAKEEMAIL);
+        Assert.assertThat(users.size(), Matchers.is(expected));
+    }
+
+    @Test
+    public void userFoundByEmail() {
+        repository.save(user);
+        int expected = 1;
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+                FAKENAME, FAKELASTNAME, user.getEmail());
+        Assert.assertThat(users, Matchers.hasSize(expected));
+        Assert.assertThat(users.get(0).getFirstName(), Matchers.is(user.getFirstName()));
+        Assert.assertThat(users.get(0).getLastName(), Matchers.is(user.getLastName()));
+    }
+
+    @Test
+    public void userFoundByFirstName() {
+        repository.save(user);
+        int expected = 1;
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+                user.getFirstName(), FAKELASTNAME, FAKEEMAIL);
+        Assert.assertThat(users, Matchers.hasSize(expected));
+        Assert.assertThat(users.get(0).getEmail(), Matchers.is(user.getEmail()));
+        Assert.assertThat(users.get(0).getLastName(), Matchers.is(user.getLastName()));
+    }
+
+    @Test
+    public void userFoundByLastName() {
+        repository.save(user);
+        int expected = 1;
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+                FAKENAME, user.getLastName(), FAKEEMAIL);
+        Assert.assertThat(users, Matchers.hasSize(expected));
+        Assert.assertThat(users.get(0).getEmail(), Matchers.is(user.getEmail()));
+        Assert.assertThat(users.get(0).getFirstName(), Matchers.is(user.getFirstName()));
     }
 
 }
