@@ -1,5 +1,6 @@
 package edu.iis.mto.blog.domain;
 
+import edu.iis.mto.blog.domain.errors.DomainError;
 import edu.iis.mto.blog.domain.model.BlogPost;
 import edu.iis.mto.blog.domain.model.LikePost;
 import edu.iis.mto.blog.domain.repository.BlogPostRepository;
@@ -79,6 +80,46 @@ public class BlogManagerTest {
         Mockito.when(likePostRepository.findByUserAndPost(secondUser, blogPost)).thenReturn(likePost);
 
         Assert.assertThat(blogService.addLikeToPost(secondUser.getId(), blogPost.getId()), Matchers.is(true));
+    }
+
+    @Test (expected = DomainError.class)
+    public void throwDomainErrorWhenUserTryToLikeOwnPost() {
+        User user = new User();
+        user.setId(17L);
+        user.setFirstName("Tom");
+        user.setLastName("Brown");
+        user.setEmail("tom@brown.com");
+        user.setAccountStatus(AccountStatus.CONFIRMED);
+
+        BlogPost blogPost = new BlogPost();
+        blogPost.setId(1L);
+        blogPost.setUser(user);
+        blogPost.setEntry("Entry");
+
+        Mockito.when(userRepository.findOne(17L)).thenReturn(user);
+        Mockito.when(blogPostRepository.findOne(1L)).thenReturn(blogPost);
+
+        blogService.addLikeToPost(17L, 1L);
+    }
+
+    @Test (expected = DomainError.class)
+    public void throwDomainErrorWhenUserWithNewStatusTryLikePost() {
+        User user = new User();
+        user.setId(17L);
+        user.setFirstName("Tom");
+        user.setLastName("Brown");
+        user.setEmail("tom@brown.com");
+        user.setAccountStatus(AccountStatus.NEW);
+
+        BlogPost blogPost = new BlogPost();
+        blogPost.setId(1L);
+        blogPost.setUser(user);
+        blogPost.setEntry("Entry");
+
+        Mockito.when(userRepository.findOne(17L)).thenReturn(user);
+        Mockito.when(blogPostRepository.findOne(1L)).thenReturn(blogPost);
+
+        blogService.addLikeToPost(17L, 1L);
     }
 
 }
