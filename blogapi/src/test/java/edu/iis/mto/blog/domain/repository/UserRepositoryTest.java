@@ -5,7 +5,6 @@ import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,9 @@ public class UserRepositoryTest {
     private UserRepository repository;
 
     private User user;
-    private final String name = "name";
-    private final String lastname = "lastname";
-    private final String email = "email@fekemail.com";
+    private final String FAKENAME = "FAKENAME";
+    private final String FAKELASTNAME = "FAKELASTNAME";
+    private final String FAKEEMAIL = "FAKEEMAIL@fekemail.com";
 
     @Before
     public void setUp() {
@@ -45,16 +44,14 @@ public class UserRepositoryTest {
 
         List<User> users = repository.findAll();
 
-        Assert.assertThat(users, Matchers.hasSize(1));
+        Assert.assertThat(users, Matchers.hasSize(4));
     }
 
     @Test
-    public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
-        User persistedUser = entityManager.persist(user);
+    public void shouldFindFourUsersIfRepositoryContainsFourUserEntity() {
         List<User> users = repository.findAll();
 
-        Assert.assertThat(users, Matchers.hasSize(2));
-        Assert.assertThat(users.get(1).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
+        Assert.assertThat(users, Matchers.hasSize(4));
     }
 
     @Test
@@ -68,7 +65,8 @@ public class UserRepositoryTest {
     @Test
     public void userNotFound() {
         int expected = 0;
-        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(name, lastname, email);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+                FAKENAME, FAKELASTNAME, FAKEEMAIL);
         Assert.assertThat(users.size(), Matchers.is(expected));
     }
 
@@ -76,18 +74,19 @@ public class UserRepositoryTest {
     public void userFoundByEmail() {
         repository.save(user);
         int expected = 1;
-        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(name,lastname, user.getEmail());
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+                FAKENAME, FAKELASTNAME, user.getEmail());
         Assert.assertThat(users, Matchers.hasSize(expected));
         Assert.assertThat(users.get(0).getFirstName(), Matchers.is(user.getFirstName()));
         Assert.assertThat(users.get(0).getLastName(), Matchers.is(user.getLastName()));
-
     }
 
     @Test
     public void userFoundByFirstName() {
         repository.save(user);
         int expected = 1;
-        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(user.getFirstName(), lastname, email);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+                user.getFirstName(), FAKELASTNAME, FAKEEMAIL);
         Assert.assertThat(users, Matchers.hasSize(expected));
         Assert.assertThat(users.get(0).getEmail(), Matchers.is(user.getEmail()));
         Assert.assertThat(users.get(0).getLastName(), Matchers.is(user.getLastName()));
@@ -97,7 +96,8 @@ public class UserRepositoryTest {
     public void userFoundByLastName() {
         repository.save(user);
         int expected = 1;
-        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(name, user.getLastName(), email);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(
+                FAKENAME, user.getLastName(), FAKEEMAIL);
         Assert.assertThat(users, Matchers.hasSize(expected));
         Assert.assertThat(users.get(0).getEmail(), Matchers.is(user.getEmail()));
         Assert.assertThat(users.get(0).getFirstName(), Matchers.is(user.getFirstName()));

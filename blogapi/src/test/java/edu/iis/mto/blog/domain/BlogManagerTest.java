@@ -49,11 +49,11 @@ public class BlogManagerTest {
     @Before
     public void setUp() {
         user = new User();
-        user.setFirstName("Jan");
-        user.setLastName("test");
-        user.setEmail("john@test.com");
+        user.setFirstName("John");
+        user.setLastName("Steward");
+        user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.CONFIRMED);
-        user.setId(2l);
+        user.setId(1l);
 
         User temporaryuser = new User();
         temporaryuser.setFirstName("test");
