@@ -30,6 +30,9 @@ public class BlogManager extends DomainService implements BlogService {
     @Override
     public Long createPost(Long userId, PostRequest postRequest) {
         User user = userRepository.findOne(userId);
+        if (user != null && user.getAccountStatus() != AccountStatus.CONFIRMED) {
+            throw new DomainError("user status is NOT CONFIRMED");
+        }
         BlogPost post = mapper.mapToEntity(postRequest);
         post.setUser(user);
         blogPostRepository.save(post);
@@ -39,7 +42,7 @@ public class BlogManager extends DomainService implements BlogService {
     @Override
     public boolean addLikeToPost(Long userId, Long postId) {
         User user = userRepository.findOne(userId);
-        if (user != null && user.getAccountStatus() != AccountStatus.CONFIRMED) {
+        if (user != null && user.getAccountStatus() == AccountStatus.CONFIRMED) {
             throw new DomainError("user status is NOT CONFIRMED");
         }
         BlogPost post = blogPostRepository.findOne(postId);
