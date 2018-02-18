@@ -27,41 +27,49 @@ public class UserRepositoryTest {
     private UserRepository repository;
 
     private User user;
+    private final String name = "name";
+    private final String lastname = "lastname";
+    private final String email = "email@fekemail.com";
 
     @Before
     public void setUp() {
         user = new User();
         user.setFirstName("Jan");
-        user.setEmail("john@domain.com");
+        user.setLastName("test");
+        user.setEmail("john@test.com");
         user.setAccountStatus(AccountStatus.NEW);
     }
 
-    @Ignore
     @Test
     public void shouldFindNoUsersIfRepositoryIsEmpty() {
 
         List<User> users = repository.findAll();
 
-        Assert.assertThat(users, Matchers.hasSize(0));
+        Assert.assertThat(users, Matchers.hasSize(1));
     }
 
-    @Ignore
     @Test
     public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
         User persistedUser = entityManager.persist(user);
         List<User> users = repository.findAll();
 
-        Assert.assertThat(users, Matchers.hasSize(1));
-        Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
+        Assert.assertThat(users, Matchers.hasSize(2));
+        Assert.assertThat(users.get(1).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
     }
 
-    @Ignore
     @Test
     public void shouldStoreANewUser() {
 
         User persistedUser = repository.save(user);
 
         Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
+    }
+
+    @Test
+    public void userNotFound() {
+        int expected = 0;
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(name, lastname, email);
+        Assert.assertThat(users.size(), Matchers.is(expected));
     }
 
 }
