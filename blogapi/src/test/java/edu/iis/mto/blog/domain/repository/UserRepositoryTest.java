@@ -72,4 +72,35 @@ public class UserRepositoryTest {
         Assert.assertThat(users.size(), Matchers.is(expected));
     }
 
+    @Test
+    public void userFoundByEmail() {
+        repository.save(user);
+        int expected = 1;
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(name,lastname, user.getEmail());
+        Assert.assertThat(users, Matchers.hasSize(expected));
+        Assert.assertThat(users.get(0).getFirstName(), Matchers.is(user.getFirstName()));
+        Assert.assertThat(users.get(0).getLastName(), Matchers.is(user.getLastName()));
+
+    }
+
+    @Test
+    public void userFoundByFirstName() {
+        repository.save(user);
+        int expected = 1;
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(user.getFirstName(), lastname, email);
+        Assert.assertThat(users, Matchers.hasSize(expected));
+        Assert.assertThat(users.get(0).getEmail(), Matchers.is(user.getEmail()));
+        Assert.assertThat(users.get(0).getLastName(), Matchers.is(user.getLastName()));
+    }
+
+    @Test
+    public void userFoundByLastName() {
+        repository.save(user);
+        int expected = 1;
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(name, user.getLastName(), email);
+        Assert.assertThat(users, Matchers.hasSize(expected));
+        Assert.assertThat(users.get(0).getEmail(), Matchers.is(user.getEmail()));
+        Assert.assertThat(users.get(0).getFirstName(), Matchers.is(user.getFirstName()));
+    }
+
 }
